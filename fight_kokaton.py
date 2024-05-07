@@ -134,6 +134,20 @@ class Beam:
             screen.blit(self.img, self.rct)
 
 
+class Score:
+    def __init__(self):
+        self.fonto = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30)
+        self.color=(0,0,255)
+        self.score=0
+        self.txt = self.fonto.render("スコア:", 0, self.color)
+        self.txtcenter=(100,HEIGHT-50)
+    
+    def update(self,screen: pg.Surface):
+        self.txtscore=self.fonto.render(str(self.score), 0, self.color)
+        screen.blit(self.txt, self.txtcenter)
+        screen.blit(self.txtscore, (200,HEIGHT-50))
+
+
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
@@ -144,6 +158,7 @@ def main():
     beam = None
     clock = pg.time.Clock()
     tmr = 0
+    score=Score()
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -176,11 +191,13 @@ def main():
                     bombs[i]=None
                     bird.change_img(6, screen)
                     pg.display.update()
+                    score.score+=1
         bombs=[bomb for bomb in bombs if bomb is not None]
 
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
+        score.update(screen)
         for bomb in bombs:
             bomb.update(screen)
         if beam is not None:
